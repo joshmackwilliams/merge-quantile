@@ -6,8 +6,8 @@ import java.util.Arrays; // Needed for sorting new data before adding to the ran
  * MergeQuantileStream - Find median and other percentiles of streamed data with high accuracy. 
  * 
  * The public API of this class is quite simple. To add a data point to the set, simply call 
- * stream(data). To find a particular percentile (a number n such that some percentage of the
- * data is less than n), just call find_percentile(percentage expressed as a double between 0 and 1)
+ * stream(data). To find a particular quantile (a number n such that some percentage of the
+ * data is less than n), just call find_quantile(quantile expressed as a double between 0 and 1)
  * 
  * The big advantage of this algorithm is that the whole data set doesn't need to fit in memory. 
  * In fact, the memory complexity is O(log(n)). Streaming a data point or finding a percentile 
@@ -31,7 +31,7 @@ import java.util.Arrays; // Needed for sorting new data before adding to the ran
  * We do this until we find an empty space. The result is something like incrementing a binary number, 
  * with bits combining and carrying into the next place. 
  * 
- * To find a percentile, we simply walk through all of the ranks, counting how many rank 0 data points 
+ * To find a quantile, we simply walk through all of the ranks, counting how many rank 0 data points 
  * have been passed until we find the right number. Then we can return the next data point. 
  */
 
@@ -60,7 +60,7 @@ public class MergeQuantileStream {
 	}
 	
 	// Incorporates all the data. Basically walk through the data, tracking how many data points have been 
-	// passed, until we reach the percentile we are looking for. 
+	// passed, until we reach the quantile we are looking for. 
 	public double find_quantile(double percentile) {
 		Arrays.sort(building, 0, data_built);
 		int[] rank_indices = new int[ranks.length];
