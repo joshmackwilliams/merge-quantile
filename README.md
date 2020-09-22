@@ -1,7 +1,7 @@
-# rank-percentiles
-An algorithm to find percentiles of streamed data by dividing data points into ranks
+# merge-quantile
+An algorithm to find quantiles of streamed data by dividing data points into ranks
 
-The big advantage of this algorithm is that the whole data set doesn't need to fit in memory. In fact, the memory complexity is O(log(n)). Streaming a data point or finding a percentile has complexity O(log(n)) as well. 
+The big advantage of this algorithm is that the whole data set doesn't need to fit in memory. In fact, the memory complexity is O(log(n)). Streaming a data point or finding a quantile has complexity O(log(n)) as well. 
 
 ## Algorithm Description: 
 
@@ -13,4 +13,4 @@ In this way, each point in a given rank is the equivalent of two data points in 
 
 Then we look for a rank 1. If one already exists, we merge it with the new rank 1 and continue up. We do this until we find an empty space. The result is something like incrementing a binary number, with bits combining and carrying into the next place. 
 
-To find a percentile, we simply walk through all of the ranks, counting how many rank 0 data points have been passed until we find the right number. Then we can return the next data point. 
+To find a quantile, we simply walk through all of the ranks, counting how many rank 0 data points have been passed until we find the right number. Then we can return the next data point. 
