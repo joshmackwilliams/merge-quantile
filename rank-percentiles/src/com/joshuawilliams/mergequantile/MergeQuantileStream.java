@@ -1,9 +1,9 @@
-package com.joshuawilliams.rankpercentiles;
+package com.joshuawilliams.mergequantile;
 
 import java.util.Arrays; // Needed for sorting new data before adding to the ranks
 
 /*
- * RankPercentileStream - Find median and other percentiles of streamed data with high accuracy. 
+ * MergeQuantileStream - Find median and other percentiles of streamed data with high accuracy. 
  * 
  * The public API of this class is quite simple. To add a data point to the set, simply call 
  * stream(data). To find a particular percentile (a number n such that some percentage of the
@@ -35,14 +35,14 @@ import java.util.Arrays; // Needed for sorting new data before adding to the ran
  * have been passed until we find the right number. Then we can return the next data point. 
  */
 
-public class RankPercentilesStream {
+public class MergeQuantileStream {
 	private int rank_size; // Granularity of the data retained. Higher values = more accurate, but more memory used
 	private double[][] ranks = new double[1][]; // Holds previously built arrays in order of rank
 		// Note that each point in rank i represents 2^i real datapoints
 	private double[] building; // The data set we're currently building. Has size x
 	private int data_built = 0; // How many data points are in building
 	
-	public RankPercentilesStream(int rank_size) {
+	public MergeQuantileStream(int rank_size) {
 		this.rank_size = rank_size;
 		building = new double[rank_size];
 	}
@@ -61,7 +61,7 @@ public class RankPercentilesStream {
 	
 	// Incorporates all the data. Basically walk through the data, tracking how many data points have been 
 	// passed, until we reach the percentile we are looking for. 
-	public double find_percentile(double percentile) {
+	public double find_quantile(double percentile) {
 		Arrays.sort(building, 0, data_built);
 		int[] rank_indices = new int[ranks.length];
 		int building_index = 0;

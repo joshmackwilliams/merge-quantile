@@ -1,15 +1,15 @@
-package com.joshuawilliams.rankpercentiles;
+package com.joshuawilliams.mergequantile;
 
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-// Test RankPercentilesStream using an unevenly distributed data set
+// Test MergeQuantileStream using an unevenly distributed data set
 public class Main {
 	public static void main(String[] args) {
 		int n_datapoints = 1000000; // Number of data points to generate
 		double percent_large = 0.25; // Percentage of data points that should be large
-		double percentile = 0.75; // Percentile to try to find
+		double quantile = 0.75; // Quantile to try to find
 		double[] datapoints = new double[n_datapoints];
 		Random random = ThreadLocalRandom.current();
 		for(int i = 0; i < n_datapoints; i++) {
@@ -21,33 +21,33 @@ public class Main {
 		shuffleArray(datapoints);
 		
 		// Try unsorted data points
-		RankPercentilesStream stream = new RankPercentilesStream(1024);
+		MergeQuantileStream stream = new MergeQuantileStream(1024);
 		for(int i = 0; i < n_datapoints; i++) {
 			stream.stream(datapoints[i]);
 		}
-		double unsorted_prediction = stream.find_percentile(percentile);
+		double unsorted_prediction = stream.find_quantile(quantile);
 		
 		Arrays.sort(datapoints); // Try sorted datapoints
 		
-		stream = new RankPercentilesStream(1024);
+		stream = new MergeQuantileStream(1024);
 		for(int i = 0; i < n_datapoints; i++) {
 			stream.stream(datapoints[i]);
 		}
-		double sorted_prediction = stream.find_percentile(percentile);
-		double true_value = datapoints[(int) Math.floor(datapoints.length * percentile)];
+		double sorted_prediction = stream.find_quantile(quantile);
+		double true_value = datapoints[(int) Math.floor(datapoints.length * quantile)];
 		
 		reverseArray(datapoints);
-		stream = new RankPercentilesStream(1024);
+		stream = new MergeQuantileStream(1024);
 		for(int i = 0; i < n_datapoints; i++) {
 			stream.stream(datapoints[i]);
 		}
-		double reversed_prediction = stream.find_percentile(percentile);
+		double reversed_prediction = stream.find_quantile(quantile);
 		
 		Arrays.sort(datapoints);
 		
-		double unsorted_error_percent = calculate_error_percent(datapoints, percentile, unsorted_prediction);
-		double sorted_error_percent = calculate_error_percent(datapoints, percentile, sorted_prediction);
-		double reversed_error_percent = calculate_error_percent(datapoints, percentile, reversed_prediction);
+		double unsorted_error_percent = calculate_error_percent(datapoints, quantile, unsorted_prediction);
+		double sorted_error_percent = calculate_error_percent(datapoints, quantile, sorted_prediction);
+		double reversed_error_percent = calculate_error_percent(datapoints, quantile, reversed_prediction);
 		System.out.println("True value: " + true_value);
 		System.out.println("Unsorted prediction: " + unsorted_prediction);
 		System.out.println("Sorted prediction: " + sorted_prediction);
